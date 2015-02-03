@@ -1,0 +1,120 @@
+<html>
+	<head>
+		<title>Problema Das Formigas</title>
+		<style type="text/css">
+
+			body {
+				font:76% normal verdana,arial,tahoma;
+			}
+
+			h1, h2 {
+				font-size:1em;
+			}
+
+			#Ant {
+				/* simple box */
+				position:absolute;
+				left:55em;
+				top:0.7em;
+				height:3em;
+				line-height:0.001em;
+				background:#000000;
+				/*border:1px solid #003366;*/
+				white-space:nowrap;
+				padding:0.2em;
+			}
+
+		</style>
+		<script type="text/javascript">
+
+			var lim = 8;
+			var dir = new Array();
+			var started = false;
+			document.onkeydown = checkKey;
+			
+			function doMove() 
+			{
+				var foo = document.getElementsByClassName('Ants');
+				// move
+				for (i in foo)
+				{
+					if (foo[i].style && foo[i].style.left)
+					{
+						foo[i].style.left = parseInt(foo[i].style.left)+dir[i]+'px';
+					}
+				}
+				// collide
+				for (i in foo)
+				{
+					if (foo[i].style && foo[i].style.left)
+					{
+						for (j in foo)
+						{
+							if (foo[j].style && foo[j].style.left && i < j)
+							{
+								if (dir[i] == 1 && dir[j] == -1)
+								{
+									if (parseInt(foo[i].style.left)+parseInt(foo[i].style.width) > parseInt(foo[j].style.left))
+									{
+										var tmp = dir[j];
+										dir[j] = dir[i];
+										dir[i] = tmp;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			function checkKey(e) {
+
+				if (started) location.reload();
+				else
+				{
+					e = e || window.event;
+
+					if (e.keyCode == '38') {
+						startIt(0);
+					}
+					else if (e.keyCode == '40') {
+						startIt(1);
+					}
+				}
+			}
+
+			function startIt(col) 
+			{
+				var base = document.getElementById('Ant');
+				
+				setInterval(doMove, 20);
+				started = true;
+				
+				for (var f = 0; f < lim; ++f)
+				{
+					foo = document.createElement('Ants');
+					foo.className = "Ants";
+					document.body.appendChild(foo);
+					foo.style.cssText = document.defaultView.getComputedStyle(base, "").cssText;
+					foo.style.top = "8em";
+					foo.style.left = 100+200*f+Math.random()*100-50+"px";
+					if (col)
+						foo.style.background = '#'+(function lol(m,s,c){return s[m.floor(m.random() * s.length)] + (c && lol(m,s,c-1));})(Math,'0123456789F',4);
+					else
+						foo.style.background = '#000000';
+					dir[f] = Math.floor((Math.random()*2));
+					if (dir[f] == 0) dir[f] = -1;
+				}
+			}
+
+		</script>
+	</head>
+
+	<body>
+
+		<h1>Problemas das Formigas!! Aperte pra CIMA para criar formigas pretas e para BAIXO para criar coloridas :)</h1>
+
+		<div id="Ant"></div>
+
+	</body>
+</html>
